@@ -1,0 +1,10 @@
+Flavor network and the principles of food pairing - dataset of food mappings to vectors
+
+Recipe recommendation using ingredient networks - prior work on predicting a recipe
+
+vectors -> LSTM
+
+node2vec
+github.com/wbakst/food/
+
+William Bakst (TA who helped us)

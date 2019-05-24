@@ -91,6 +91,8 @@ for r in new_recs:
 		rating = r.split("\"rating\": ")[1].split(',')[0]
 		directions = r.split("\"directions\": [")[1].split(']')[0]
 		ingredients = r.split('\"ingredients\": [')[1].split(']')[0]
+		title = r.split('\"title\": \"')[1].split('\"')[0]
+		
 		# print(len(ingredients))
 		try:
 			rating = float(rating)
@@ -101,6 +103,11 @@ for r in new_recs:
 				recs_dict['rating'].append(rating)
 				recs_dict['directions'].append(directions)
 				recs_dict['ingredients'].append(ingredients)
+				# print(title)
+				# print(ingredients)
+				# print(directions)
+				# print('\n')
+				# print('\n')
 
 
 
@@ -112,18 +119,16 @@ for ingredient in ingredient_names:
 	recs_dict[ingredient + '_freq'] = [i.count(ingredient) for i in recs_dict['ingredients']]
 	recs_dict['has_' + ingredient] = [1 if i > 0 else 0 for i in recs_dict[ingredient + '_freq']]
 
+data = pandas.DataFrame(recs_dict)
+train = data.sample(frac=0.6)
+test = data.drop(train.index)
+validation = test.sample(frac = 0.5)
+test = test.drop(validation.index)
 
-df = pandas.DataFrame(recs_dict)
-print(df)
-df.to_csv('new.csv', index = False)
+train.to_csv('train_data.csv', index = False)
+validation.to_csv('validation_data.csv', index = False)
+test.to_csv('test_data.csv', index = False)
 
-# with open('new.csv','w+') as csvfile:
-# 	csvfile.write(csv_string)
-
-# csvfile.close()
-# data['recipe_length'] = recipe_string_lengths
-
-# s = data.to_csv()
-
-# with open('new_recipesData.csv', 'w+') as new_file:
-# 	new_file.write(s)
+print(len(train))
+print(len(test))
+print(len(validation))

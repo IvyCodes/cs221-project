@@ -25,11 +25,12 @@ def get_KNN_predictions(train, test, x_cols, y_cols, n_neighbors = 100):
 	prediction = knn.predict(test[x_cols])
 	return prediction
 
-with open("recipesData.csv", 'r') as csvfile:
+with open("recipes.csv", 'r') as csvfile:
 	data = pandas.read_csv(csvfile)
+csvfile.close()
 
 # data = data.sample(frac = 0.5)
-train=data.sample(frac=0.8,random_state=200)
+train=data.sample(frac=0.8,random_state=500)
 test=data.drop(train.index)
 
 print('Training set size = ' + str(len(train)))
@@ -51,12 +52,10 @@ y_col = ['Rating']
 # plt.plot(accs)
 # plt.show()
 
-
+# print(x_cols)
 
 actual = test[y_col[0]]
 prediction = get_KNN_predictions(train, test, x_cols, y_col)
 acc = find_accuracy(prediction,actual)
 
 print(acc)
-
-
