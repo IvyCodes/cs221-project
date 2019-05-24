@@ -1,15 +1,7 @@
-def get_accuracy(prediction,actual):
-	num_correct = 0
-	for (x,y) in zip(prediction,actual):
-		if y-1 <= x <= y+1:
-			num_correct+=1
-	# print(str(num_correct) + ' out of ' + str(len(actual)) + ' correct')
-	# print('Accuracy = ' + str(num_correct/len(actual)))
-	return num_correct/len(actual)
+import matplotlib.pyplot as plt
+import pandas
 
-
-def ingredient_names():
-	return ['almond', 'amaretto', 'anchovy', 'anise', 'apple', 'apple juice', 'apricot',
+ingredients = ['almond', 'amaretto', 'anchovy', 'anise', 'apple', 'apple juice', 'apricot',
 	 'artichoke', 'arugula', 'asian pear', 'asparagus', 'avocado', 'bacon', 'bake',
 	 'banana', 'barley', 'basil', 'bass', 'bean', 'beef', 'beef rib', 'beef shank',
 	 'beef tenderloin', 'beer', 'beet', 'bell pepper', 'berry', 'biscuit', 'bitters',
@@ -71,3 +63,55 @@ def ingredient_names():
 	 'venison', 'vermouth', 'vinegar', 'vodka', 'waffle', 'walnut', 'wasabi',
 	 'watercress', 'watermelon', 'wheat', 'whiskey', 'whole wheat',
 	 'wild rice', 'wine', 'wok', 'yogurt', 'yuca', 'zucchini', 'turkey']
+
+def get_accuracy(prediction,actual):
+	num_correct = 0
+	for (x,y) in zip(prediction,actual):
+		if y-1 <= x <= y+1:
+			num_correct+=1
+	# print(str(num_correct) + ' out of ' + str(len(actual)) + ' correct')
+	# print('Accuracy = ' + str(num_correct/len(actual)))
+	return num_correct/len(actual)
+
+def make_accuracy_plot(prediction,actual):
+	plt.plot(actual,prediction, "bo")
+	plt.ylim([0,5])
+	plt.show()
+
+def write_accuracy_data(prediction, actual, filename):
+	results = {'prediction':prediction, 'actual':actual}
+	results_csv = pandas.DataFrame(results)
+
+	results_csv.to_csv('./results/' + filename,index = False)
+
+
+def ingredient_names():
+	return ingredients
+
+def ingredient_freq_labels():
+	result = []
+	for i in ingredients:
+		print(i)
+		result.append(i + '_freq')
+	return result
+
+def has_ingredient_labels():
+	result = []
+	for i in ingredients:
+		result.append('has_' + i)
+	return result
+
+def ingredient_length_labels():
+	return ['ingredient_lengths']
+
+def direction_length_labels():
+	return ['direction_lengths']
+
+def ingredient_labels():
+	return ['ingredients']
+
+def direction_labels():
+	return ['directions']
+
+def rating_label():
+	return ['rating']
