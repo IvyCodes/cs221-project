@@ -1,16 +1,10 @@
 import pandas
 from sklearn.neighbors import KNeighborsRegressor
 import matplotlib.pyplot as plt
+import util
 
 
-def find_accuracy(prediction,actual):
-	num_correct = 0
-	for (x,y) in zip(prediction,actual):
-		if y-1 <= x <= y+1:
-			num_correct+=1
-	# print(str(num_correct) + ' out of ' + str(len(actual)) + ' correct')
-	# print('Accuracy = ' + str(num_correct/len(actual)))
-	return num_correct/len(actual)
+
 
 
 def get_baseline_predictions(train, test, x_cols, y_col):
@@ -20,25 +14,25 @@ def get_baseline_predictions(train, test, x_cols, y_col):
 
 
 def get_KNN_predictions(train, test, x_cols, y_cols, n_neighbors = 100):
-	knn = KNeighborsRegressor(n_neighbors=5000)
+	knn = KNeighborsRegressor(n_neighbors=200)
 	knn.fit(train[x_cols], train[y_col])
 	prediction = knn.predict(test[x_cols])
 	return prediction
 
-with open("recipes.csv", 'r') as csvfile:
-	data = pandas.read_csv(csvfile)
+with open("train_data.csv", 'r') as csvfile:
+	train = pandas.read_csv(csvfile)
 csvfile.close()
 
-# data = data.sample(frac = 0.5)
-train=data.sample(frac=0.8,random_state=500)
-test=data.drop(train.index)
+with open("validation_data.csv", 'r') as csvfile:
+	validate = pandas.read_csv(csvfile)
+csvfile.close()
 
 print('Training set size = ' + str(len(train)))
-print('Test set size = ' + str(len(test)))
+print('Validation set size = ' + str(len(validate)))
 
 # print(data.columns.values) #list of all column names
-x_cols = data.columns.values[1:]
-y_col = ['Rating']
+x_cols = train.columns.values[3:]
+y_col = train.columns.values[0]
 
 # accs = []
 # for i in range(len(train)/100):
@@ -54,8 +48,8 @@ y_col = ['Rating']
 
 # print(x_cols)
 
-actual = test[y_col[0]]
-prediction = get_KNN_predictions(train, test, x_cols, y_col)
-acc = find_accuracy(prediction,actual)
+actual = validate[y_col]
+prediction = get_KNN_predictions(train, validate, x_cols, y_col)
+acc = util.get_accuracy(prediction,actual)
 
 print(acc)
