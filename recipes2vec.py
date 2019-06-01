@@ -85,9 +85,6 @@ class word2vec():
 				# 1. predicted y using softmax (y_pred) 2. matrix of hidden layer (h) 3. output layer before softmax (u)
 				y_pred, h, u = self.forward_pass(w_t)
 
-				# Calculate error
-				# 1. For a target word, calculate difference between y_pred and each of the context words
-				# 2. Sum up the differences using np.sum to give us the error for this particular target word
 				EI = np.sum([np.subtract(y_pred, word) for word in w_c], axis=0)
 
 				# Backpropagation
@@ -117,13 +114,6 @@ class word2vec():
 
 		dl_dw2 = np.outer(h, e)
 		dl_dw1 = np.outer(x, np.dot(self.w2, e.T))
-
-		########################################
-		#print('Delta for w2', dl_dw2)			#
-		#print('Hidden layer', h)				#
-		#print('np.dot', np.dot(self.w2, e.T))	#
-		#print('Delta for w1', dl_dw1)			#
-		#########################################
 
 		# Update weights
 		self.w1 = self.w1 - (self.lr * dl_dw1)
