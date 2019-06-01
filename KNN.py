@@ -52,5 +52,5 @@ acc = util.get_accuracy(prediction,actual)
 print(n)
 print(acc)
 util.make_accuracy_plot(prediction,actual)
-util.write_accuracy_data(prediction, actual, 'KNN_results.csv')
+# util.write_accuracy_data(prediction, actual, 'KNN_results.csv')
 
