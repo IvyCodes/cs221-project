@@ -7,6 +7,8 @@ import csv
 import random
 import numpy as np
 from   collections import defaultdict
+import util
+import pickle
 
 class word2vec():
 
@@ -149,14 +151,14 @@ class word2vec():
 # Run recipes2vec.py
 
 # "recipescorpus.txt" should contain all recipees ingredients consecutively
-recipescorpus = open("recipescorpus.txt", "r")
+# recipescorpus = open("recipescorpus.txt", "r")
 
-if (recipescorpus.mode == 'r'):
-    corpusText = recipescorpus.read()
+# if (recipescorpus.mode == 'r'):
+#     corpusText = recipescorpus.read()
 
-recipescorpus.close()
+# recipescorpus.close()
 
-corpus = [[word.lower() for word in corpusText.split()]]
+corpus = [util.ingredient_names()]
 
 # Get Size of Word Embedding
 ingredientDict = defaultdict(int)
@@ -181,18 +183,27 @@ training_data = w2v.generate_training_data(settings, corpus)
 # Training
 w2v.train(training_data)
 
-print("Weights:")
-print (w2v.w1)
-print (w2v.w2)
-print("Weights:")
+# print("Weights:")
+# print (w2v.w1)
+# print (w2v.w2)
+# print("Weights:")
 
 # Saving Ingredient Embeddings
-with open('ingredientEmbeddings.csv', mode='w') as ing_emb:
-	writer = csv.writer(ing_emb, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-	for key, val in ingredientDict.items():
-		vec = w2v.word_vec(key)
+embeddings = {}
+for key,val in ingredientDict.items():
+	vec = w2v.word_vec(key)
+	embeddings[key] = vec
+	print(len(vec))
 
-		embedded = {key: vec}
-		print(embedded)
-		writer.writerow(embedded.items())
-ing_emb.close()
+outfile = open('ingredient_embeddings.pickle', 'wb')
+pickle.dump(embeddings, outfile)
+outfile.close()
+# with open('ingredientEmbeddings.csv', mode='w') as ing_emb:
+# 	writer = csv.writer(ing_emb, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+# 	for key, val in ingredientDict.items():
+# 		vec = w2v.word_vec(key)
+
+# 		embedded = {key: vec}
+# 		print(embedded)
+# 		writer.writerow(embedded.items())
+# ing_emb.close()
