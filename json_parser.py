@@ -55,7 +55,7 @@ recs_dict['ingredient_lengths'] = [len(i) for i in recs_dict['ingredients']]
 
 
 for ingredient in ingredient_names:
-	recs_dict[ingredient + '_freq'] = [i.count(ingredient) for i in recs_dict['ingredients']]
+	recs_dict[ingredient + '_freq'] = [i.lower().count(ingredient) for i in recs_dict['ingredients']]
 	recs_dict['has_' + ingredient] = [1 if i > 0 else 0 for i in recs_dict[ingredient + '_freq']]
 
 data = pandas.DataFrame(recs_dict)

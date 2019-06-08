@@ -9,6 +9,7 @@ import numpy as np
 from   collections import defaultdict
 import util
 import pickle
+import pandas
 
 class word2vec():
 
@@ -157,20 +158,37 @@ class word2vec():
 #     corpusText = recipescorpus.read()
 
 # recipescorpus.close()
+ingredients = set(util.ingredient_names())
 
 corpus = [util.ingredient_names()]
+with open('train_data.csv', 'r') as csvfile:
+	train = pandas.read_csv(csvfile)
+csvfile.close()
 
+i = 0
+for index,row in train.iterrows():
+	print(i)
+	i+=1
+	if i > 400:
+		break
+	new_rec_corpus = []
+	for word in row['ingredients'].lower().split():
+		for ing in ingredients:
+			if ing in word:
+				new_rec_corpus.append(word)
+	corpus.append(new_rec_corpus)
 # Get Size of Word Embedding
-ingredientDict = defaultdict(int)
-for row in corpus:
-	for word in row:
-		ingredientDict[word] += 1
-embed_size = len(ingredientDict.keys())
+# ingredientDict = defaultdict(int)
+# for row in corpus:
+# 	for word in row:
+# 		ingredientDict[word] += 1
+# embed_size = len(ingredientDict.keys())
+embed_size = 150
 
 settings = {
-	'window_size': 2,		# context window size
+	'window_size': 5,		# context window size
 	'n': embed_size,		# dimensions of word embeddings
-	'epochs': 50,			# number of training epochs
+	'epochs': 20,			# number of training epochs
 	'learning_rate': 0.01	# learning rate
 }
 
@@ -190,10 +208,9 @@ w2v.train(training_data)
 
 # Saving Ingredient Embeddings
 embeddings = {}
-for key,val in ingredientDict.items():
+for key in ingredients:
 	vec = w2v.word_vec(key)
 	embeddings[key] = vec
-	print(len(vec))
 
 outfile = open('ingredient_embeddings.pickle', 'wb')
 pickle.dump(embeddings, outfile)
